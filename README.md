@@ -3,6 +3,9 @@
 ### Statement
 This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool. Overtone is a library that uses high-level procedural algorithms to generate MIDI output. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands and MIDI input through various sources, provide the user a variety of functions and to that manipulate their input and control the sound, then send the data to Max, where it will be processed into sound, and output through the speakers.
 
+![OPL FP Diagram](https://github.com/oplS16projects/George-Mitwasi-Alex-Gribov-Kevin-Dibble/blob/master/OPL%20FP%20diagram.jpg)
+
+
 Here is a more detailed description of this project's feature's.
 * MIDI input from a keyboard
   * We will use the Clojure library Overtone to recieve MIDI input from a physical keyboard connected via USB, interpret the data inside Overtone, and output the MIDI data to Max through a virtual MIDI port.
@@ -18,7 +21,8 @@ Here is a more detailed description of this project's feature's.
     * Frequency of oscilllators. An oscillator is a repeating waveform with a fundamental frequency and peak amplitude. Organic sounds found in nature take thousands of oscillators for recreation, but we'd like to implemnent 5 oscillators.
     * Subtractive synthesis. This is the removing of frequencies to carve a desired sound.
     * FM Modulation. This method uses another input signal to impress new data onto the current sound.
-    * 
+
+
 ### Analysis
 Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
 
