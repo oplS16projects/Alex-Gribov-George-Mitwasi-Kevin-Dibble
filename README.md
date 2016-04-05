@@ -1,9 +1,24 @@
 # Project Title: title here (10 words maximum)
 
 ### Statement
-Describe your project. Why is it interesting? Why is it interesting to you personally? What do you hope to learn?
-This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool.
+This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool. Overtone is a library that uses high-level procedural algorithms to generate MIDI output. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands and MIDI input through various sources, provide the user a variety of functions and to that manipulate their input and control the sound, then send the data to Max, where it will be processed into sound, and output through the speakers.
 
+Here is a more detailed description of this project's feature's.
+* MIDI input from a keyboard
+  * We will use the Clojure library Overtone to recieve MIDI input from a physical keyboard connected via USB, interpret the data inside Overtone, and output the MIDI data to Max through a virtual MIDI port.
+  * The cool part is that we can process the MIDI input in Racket before sending it to Max to create the sound. For example, when I play a melody on the keyboard, we could transpose the melody to a different key before sending it to Max for sound generation.
+* Live looping
+  * The code we will write in Racket will enable the user to record a sequence of notes from their MIDI keyboard with a push of a button.
+  * With the loop recorded, it will be sent through its own MIDI channel to its unique instnace of Max where it can be altered independent of other loops or live sounds.
+* Control of sounds presets and sequences with physical buttoms
+  * One use of the buttons is to choose a sound preset. The Max patch thwill have built in sound presets availabel to the user for selection.
+  * In addtion, the user may use the buttons to record MIDI input and assign it to a button so that it can be replicate with a push.
+* Potentiometer control
+  * What's the difference between the sound of a trumpet and that of a guitar if they're playing the same note? The answer is their unique timbre. There are many factors that affect the timbre, or quality of a sound, and small changes in data can drastically afect the generated sound. Synthesizers use a series of signal processing units such as oscillators, envelopes, and modulation to craft a sound. Our project will allow these parameters in Max to be controlled by potentiometers, so that the turning of a physical knob can alter the sound output from a particular module. Here are some things we'd like to control with the potentiometer:
+    * Frequency of oscilllators. An oscillator is a repeating waveform with a fundamental frequency and peak amplitude. Organic sounds found in nature take thousands of oscillators for recreation, but we'd like to implemnent 5 oscillators.
+    * Subtractive synthesis. This is the removing of frequencies to carve a desired sound.
+    * FM Modulation. This method uses another input signal to impress new data onto the current sound.
+    * 
 ### Analysis
 Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
 
