@@ -109,10 +109,17 @@ You will be expected to turn in code, documentation, and data (as appropriate) a
 Write concrete steps for your schedule to move from concept to working system. 
 
 ### First Milestone (Fri Apr 15)
-What exactly will be turned in on this day? 
+I think the first steps for our team are to:
+* Become very familiar with the Overtone Library
+* Establish and test the connections between each section of the project. We all understand our individual responsibilities well so the hardest part seems to be combining it all together. If we can make this happen the hardest part is over.
+ * MIDI connection from Overtone to Max
+ * Hardware connection from to Overtone to Max
+ * Live MIDI input from keyboard to Overtone
 
 ### Second Milestone (Fri Apr 22)
 What exactly will be turned in on this day? 
 
 ### Final Presentation (last week of semester)
 What additionally will be done in the last chunk of time?
+
+* Finally touches to the Max patch
