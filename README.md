@@ -23,15 +23,6 @@ Here is a more detailed description of this project's feature's.
     * Subtractive synthesis. This is the removing of frequencies to carve a desired sound.
 
 ## Group Responsibilities
-Here each group member gets a section where they, as an individual, detail what they are responsible for in this project. Each group member writes their own Responsibility section. Include the milestones and final deliverable.
-
-**Additional instructions for teams of three:** 
-* Remember that you must have prior written permission to work in groups of three (specifically, an approved `FP3` team declaration submission).
-* The team must nominate a lead. This person is primarily responsible for code integration. This work may be shared, but the team lead has default responsibility.
-* The team lead has full partner implementation responsibilities also.
-* Identify who is team lead.
-
-In the headings below, replace the silly names and GitHub handles with your actual ones.
 
 ### Alex Gribov @agribov (Team Lead)
 *	Design a circuit of potentiometers, lights, and buttons that will connect to an Arduino, and write Racket code that will both send and receive data from the buttons. 
@@ -73,22 +64,38 @@ In the headings below, replace the silly names and GitHub handles with your actu
 ### Analysis
 Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
 
-The idea here is to identify what ideas from the class you will use in carrying out your project. 
+A concept that we expect frequent use of in this project is "Message Passing" and "State Modification". It's be necesssary in communication protocols between our various tools.
 
 ### Data set or other source materials
-If you will be working with existing data, where will you get those data from? (Dowload it from a website? access it in a database? create it in a simulation you will build....)
-
-How will you convert that data into a form usable for your project?  
-
-Do your homework here: if you are pulling data from somewhere, actually go download it and look at it. Explain in some detail what your plan is for accomplishing the necessary processing.
-
-If you are using some other starting materails, explain what they are. Basically: anything you plan to use that isn't code.
+We will be using the following materials for this project:
+* Overtone Library, which can be found at https://overtone.github.io/
+* Max/MSP, which can be found at https://cycling74.com/
+* Arduino Interface, which can be found at https://www.arduino.cc/en/Main/Software
+* External hardware
+ * MIDI keyboard
+ * Potentiometer
 
 ### Deliverable and Demonstration
 In the end we'll have a powerful music composition tool capable of algorithmic song writing, live input, and sound design. For our demonstration, our team will build a song from the ground up while explaining the tools along the way.
 
+Here's an example of the type of workflow to expect when using this tool:
+* Record button is pushed. Channels 1-4 buttons start flashing. (Now in "Choose Channel" state)
+* Channel 1 button is pushed, it holds steady light, other buttons shut off (Record sequence state)
+* A sequence is played on the keyboard.
+* Record button is pushed again, this time to end the sequence. Sequence is saved as "Channel 1". Lights resume normal function, state is set to default.
+* MIDI sequence is now stored.
+* Channel 1 button is pushed (Channel light turns on to show that there's a state change). Sequence loops.
+* Button to assign effect is pushed.
+* All unassigned buttons light up.
+* One of those is pushed.
+* The pushed button startes flashing to signal that it's ready for programming.
+* User types the name of the function he'd like to assign the button to. For example: Trumpet.
+* Button stops flashing, assingment complete.
+* User pushed newley made "Trumpet" button. (Channel buttons flash to signify "Choose Channel" state)
+* User pushed Channel 1 button, it goes back to the previous state, now with the Trumpet preset selected.
+
 ### Evaluation of Results
-Success in songwriting and sound design using our unique music composition.
+Success in songwriting and sound design using our unique music composition tool.
 
 ## Schedule
 Explain how you will go from proposal to finished product. 
