@@ -22,46 +22,6 @@ Here is a more detailed description of this project's feature's.
     * Frequency of oscilllators. An oscillator is a repeating waveform with a fundamental frequency and peak amplitude. Organic sounds found in nature take thousands of oscillators for recreation, but we'd like to implemnent 5 oscillators.
     * Subtractive synthesis. This is the removing of frequencies to carve a desired sound.
 
-### Analysis
-Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
-
-The idea here is to identify what ideas from the class you will use in carrying out your project. 
-
-### Data set or other source materials
-If you will be working with existing data, where will you get those data from? (Dowload it from a website? access it in a database? create it in a simulation you will build....)
-
-How will you convert that data into a form usable for your project?  
-
-Do your homework here: if you are pulling data from somewhere, actually go download it and look at it. Explain in some detail what your plan is for accomplishing the necessary processing.
-
-If you are using some other starting materails, explain what they are. Basically: anything you plan to use that isn't code.
-
-### Deliverable and Demonstration
-In the end we'll have a powerful music composition tool capable of algorithmic song writing, live input, and sound design. For our demonstration, our team will build a song from the ground up while explaining the tools along the way.
-
-### Evaluation of Results
-Success in songwriting and sound design using our unique music composition.
-
-## Schedule
-Explain how you will go from proposal to finished product. 
-
-There are three deliverable milestones to explicitly define, below.
-
-The nature of deliverables depend on your project, but may include things like processed data ready for import, core algorithms implemented, interface design prototyped, etc. 
-
-You will be expected to turn in code, documentation, and data (as appropriate) at each of these stages.
-
-Write concrete steps for your schedule to move from concept to working system. 
-
-### First Milestone (Fri Apr 15)
-What exactly will be turned in on this day? 
-
-### Second Milestone (Fri Apr 22)
-What exactly will be turned in on this day? 
-
-### Final Presentation (last week of semester)
-What additionally will be done in the last chunk of time?
-
 ## Group Responsibilities
 Here each group member gets a section where they, as an individual, detail what they are responsible for in this project. Each group member writes their own Responsibility section. Include the milestones and final deliverable.
 
@@ -109,3 +69,43 @@ In the headings below, replace the silly names and GitHub handles with your actu
       * Stop button.
       * ... anything else? These could be modes on the same button or distinct buttons.
     * Jamming. This should have it's own dedicated instrument stream.
+
+### Analysis
+Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
+
+The idea here is to identify what ideas from the class you will use in carrying out your project. 
+
+### Data set or other source materials
+If you will be working with existing data, where will you get those data from? (Dowload it from a website? access it in a database? create it in a simulation you will build....)
+
+How will you convert that data into a form usable for your project?  
+
+Do your homework here: if you are pulling data from somewhere, actually go download it and look at it. Explain in some detail what your plan is for accomplishing the necessary processing.
+
+If you are using some other starting materails, explain what they are. Basically: anything you plan to use that isn't code.
+
+### Deliverable and Demonstration
+In the end we'll have a powerful music composition tool capable of algorithmic song writing, live input, and sound design. For our demonstration, our team will build a song from the ground up while explaining the tools along the way.
+
+### Evaluation of Results
+Success in songwriting and sound design using our unique music composition.
+
+## Schedule
+Explain how you will go from proposal to finished product. 
+
+There are three deliverable milestones to explicitly define, below.
+
+The nature of deliverables depend on your project, but may include things like processed data ready for import, core algorithms implemented, interface design prototyped, etc. 
+
+You will be expected to turn in code, documentation, and data (as appropriate) at each of these stages.
+
+Write concrete steps for your schedule to move from concept to working system. 
+
+### First Milestone (Fri Apr 15)
+What exactly will be turned in on this day? 
+
+### Second Milestone (Fri Apr 22)
+What exactly will be turned in on this day? 
+
+### Final Presentation (last week of semester)
+What additionally will be done in the last chunk of time?
