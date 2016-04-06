@@ -3,7 +3,7 @@
 ### Overview
 This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool. Overtone is a library that uses high-level procedural algorithms to generate MIDI output. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands and MIDI input through various sources, provide the user a variety of functions and to that manipulate their input and control the sound, then send the data to Max, where it will be processed into sound, and output through the speakers.
 
-## Architecture Diagram
+## Diagram and Detailed Description
 ![OPL FP Diagram](https://github.com/oplS16projects/George-Mitwasi-Alex-Gribov-Kevin-Dibble/blob/master/OPL%20FP%20diagram.jpg)
 
 
