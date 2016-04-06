@@ -62,7 +62,7 @@ In charge of creating functions to implement live-looping
 ### Analysis
 Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
 
-A concept that we expect frequent use of in this project is "Message Passing" and "State Modification". It's be necesssary in communication protocols between our various tools.
+A few concepts that we expect frequent use of are "Message Passing" and "State Modification". They're necesssary for the communication protocols between our various tools. Another concept we expect use of is "recursion". The looping of live MIDI input is the most obvious use recursion, and we expect to find use for it in the rest of the project.
 
 ### Data set or other source materials
 We will be using the following materials for this project:
@@ -96,15 +96,6 @@ Here's an example of the type of workflow to expect when using this tool:
 Success in songwriting and sound design using our unique music composition tool. Our tool should be able to successfully use buttons (Alex), to walk through a state diagram (Kevin/Alex), which sets up a loop (Kevin/George), which sends signals to a digital synth and creats sound (George).
 
 ## Schedule
-Explain how you will go from proposal to finished product. 
-
-There are three deliverable milestones to explicitly define, below.
-
-The nature of deliverables depend on your project, but may include things like processed data ready for import, core algorithms implemented, interface design prototyped, etc. 
-
-You will be expected to turn in code, documentation, and data (as appropriate) at each of these stages.
-
-Write concrete steps for your schedule to move from concept to working system. 
 
 ### First Milestone (Fri Apr 15)
 
