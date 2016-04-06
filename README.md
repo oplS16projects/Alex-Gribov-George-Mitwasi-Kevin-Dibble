@@ -1,4 +1,4 @@
-# Project Title: title here (10 words maximum)
+# Lambda Looper
 
 ### Overview
 This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool. Overtone is a library that uses high-level procedural algorithms to generate MIDI output. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands and MIDI input through various sources, provide the user a variety of functions and to that manipulate their input and control the sound, then send the data to Max, where it will be processed into sound, and output through the speakers.
@@ -29,7 +29,7 @@ Here is a more detailed description of this project's feature's.
 * Data from Arduino:
  * Buttons send digital I/O signal, which can be used to turn on and off any preset, or effect on the synthesizer.
  * Potentiometer sends analog signal, which Racket will read and convert to an output on a 0-100 scale. This can be used to control variable effects such as timbre and volume.
- * Touchscreen? Can be used to control 2 dimensions of effects with a single touch. This would be really cool to implement, especially if Fred makes us do more than otherwise planned.
+ * Touchscreen can be used in place of knobs.
 * Data to Arduino:
  * I/O signals to turn on and off LED’s representing various effects in the software.
 *	Create state-change map for buttons and potentiometers. When a button is pushed, it puts the program into a specific state, and flashes lights to represent that state. See Workflow example below.
@@ -95,7 +95,7 @@ Here's an example of the type of workflow to expect when using this tool:
 * User pushed Channel 1 button, it goes back to the previous state, now with the Trumpet preset selected.
 
 ### Evaluation of Results
-Success in songwriting and sound design using our unique music composition tool.
+Success in songwriting and sound design using our unique music composition tool. Our tool should be able to successfully use buttons (Alex), to walk through a state diagram (Kevin/Alex), which sets up a loop (Kevin/George), which sends signals to a digital synth and creats sound (George).
 
 ## Schedule
 Explain how you will go from proposal to finished product. 
@@ -109,17 +109,30 @@ You will be expected to turn in code, documentation, and data (as appropriate) a
 Write concrete steps for your schedule to move from concept to working system. 
 
 ### First Milestone (Fri Apr 15)
+
+**Alex**: Arduino circuit complete, sending and receiving data to/from Racket.
+**George**: Keyboard sending sound through Racket to synth. Data in Racket can be used to apply effects to synth.
+**Kevin**: State change map complete.
+
+//What George wrote previously, for reference:
+```
 I think the first steps for our team are to:
 * Become very familiar with the Overtone Library
 * Establish and test the connections between each section of the project. We all understand our individual responsibilities well so the hardest part seems to be combining it all together. If we can make this happen the hardest part is over.
  * MIDI connection from Overtone to Max
  * Hardware connection from to Overtone to Max
  * Live MIDI input from keyboard to Overtone
+ ```
 
 ### Second Milestone (Fri Apr 22)
 What exactly will be turned in on this day? 
 
+**Alex**: Circuit controls software, state change feedbacks to circuit implemented.
+**George**: All effects implemented, 
+**Kevin**: Looper code is complete.
+
+
 ### Final Presentation (last week of semester)
 What additionally will be done in the last chunk of time?
 
-* Finally touches to the Max patch
+Combining all of the previously completed functions into one programming, and working out any kinks.
