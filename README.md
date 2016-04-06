@@ -3,6 +3,7 @@
 ### Statement
 This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool. Overtone is a library that uses high-level procedural algorithms to generate MIDI output. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands and MIDI input through various sources, provide the user a variety of functions and to that manipulate their input and control the sound, then send the data to Max, where it will be processed into sound, and output through the speakers.
 
+## Architecture Diagram
 ![OPL FP Diagram](https://github.com/oplS16projects/George-Mitwasi-Alex-Gribov-Kevin-Dibble/blob/master/OPL%20FP%20diagram.jpg)
 
 
@@ -20,8 +21,6 @@ Here is a more detailed description of this project's feature's.
   * What's the difference between the sound of a trumpet and that of a guitar if they're playing the same note? The answer is their unique timbre. There are many factors that affect the timbre, or quality of a sound, and small changes in data can drastically afect the generated sound. Synthesizers use a series of signal processing units such as oscillators, envelopes, and modulation to craft a sound. Our project will allow these parameters in Max to be controlled by potentiometers, so that the turning of a physical knob can alter the sound output from a particular module. Here are some things we'd like to control with the potentiometer:
     * Frequency of oscilllators. An oscillator is a repeating waveform with a fundamental frequency and peak amplitude. Organic sounds found in nature take thousands of oscillators for recreation, but we'd like to implemnent 5 oscillators.
     * Subtractive synthesis. This is the removing of frequencies to carve a desired sound.
-    * FM Modulation. This method uses another input signal to impress new data onto the current sound.
-
 
 ### Analysis
 Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
@@ -38,22 +37,10 @@ Do your homework here: if you are pulling data from somewhere, actually go downl
 If you are using some other starting materails, explain what they are. Basically: anything you plan to use that isn't code.
 
 ### Deliverable and Demonstration
-Explain exactly what you'll have at the end. What will it be able to do at the live demo?
-
-What exactly will you produce at the end of the project? A piece of software, yes, but what will it do? Here are some questions to think about (and answer depending on your application).
-
-Will it run on some data, like batch mode? Will you present some analytical results of the processing? How can it be re-run on different source data?
-
-Will it be interactive? Can you show it working? This project involves a live demo, so interactivity is good.
+In the end we'll have a powerful music composition tool capable of algorithmic song writing, live input, and sound design. For our demonstration, our team will build a song from the ground up while explaining the tools along the way.
 
 ### Evaluation of Results
-How will you know if you are successful? 
-If you include some kind of _quantitative analysis,_ that would be good.
-
-## Architecture Diagram
-Upload the architecture diagram you made for your slide presentation to your repository, and include it in-line here.
-
-Create several paragraphs of narrative to explain the pieces and how they interoperate.
+Success in songwriting and sound design using our unique music composition.
 
 ## Schedule
 Explain how you will go from proposal to finished product. 
@@ -86,11 +73,39 @@ Here each group member gets a section where they, as an individual, detail what 
 
 In the headings below, replace the silly names and GitHub handles with your actual ones.
 
-### Susan Scheme @susanscheme
-will write the....
+### Alex Gribov @agribov (Team Lead)
+*	Design a circuit of potentiometers, lights, and buttons that will connect to an Arduino, and write Racket code that will both send and receive data from the buttons. 
+* Data from Arduino:
+ * Buttons send digital I/O signal, which can be used to turn on and off any preset, or effect on the synthesizer.
+ * Potentiometer sends analog signal, which Racket will read and convert to an output on a 0-100 scale. This can be used to control variable effects such as timbre and volume.
+ * Touchscreen? Can be used to control 2 dimensions of effects with a single touch. This would be really cool to implement, especially if Fred makes us do more than otherwise planned.
+* Data to Arduino:
+ * I/O signals to turn on and off LED’s representing various effects in the software.
+*	Create state-change map for buttons and potentiometers. When a button is pushed, it puts the program into a specific state, and flashes lights to represent that state. See Workflow example below.
 
-### Leonard Lambda @lennylambda
-will work on...
+### George Mitwasi @georgemitwasi
+* Interface Max with Racket so Max can recieve MIDI input.
+ * Create a virtual MIDI port in Overtone
+ * Use "midiin" or "notein" function in Max to select the above virtual port and recieve MIDI data
+* Interface Max with Racket so Max can recieve hardware data for sound design.
+ * Create a Schema to organize the data in a specific way.
+  * Before we do this we have to be sure of what data we'd like to send to Max. This is the list thus far:
+    * Volume control
+    * Oscilator pitches
+    * Oscilator amplitudes
+    * Subtractive synthesis envelope
+ * "pack" the data in Racket using the pre-defined Schema.
+ * Use the "unpack" function in Max to untangle the data and implement streams in synthesizer patch.
 
-### Frank Functions @frankiefunk 
-Frank is team lead. Additionally, Frank will work on...   
+### Kevin Dibble @kdibble
+* Looping live MIDI input
+ * Read in data from the keyboard and hand off to Overtone.
+ * Have Overtone intrepret the data as it's own. For example, Overtone has transposing abilities so that given a certain melody and key, it can convert it to another key. We'll need to figure out how to represent the raw MIDI data of a keyboard in terms of Overtone's language.
+* Creating multi-track recording abilities
+ * This will involve intricate communication with the Arduino's interface functions.
+ * We'll need queues from buttons on the Arduino interface to toggle between MIDI modes:
+    * Recording. This involves adding a new instrument, MIDI stream, and instance of the Max synthesizer patch.
+      * Record button.
+      * Stop button.
+      * ... anything else? These could be modes on the same button or distinct buttons.
+    * Jamming. This should have it's own dedicated instrument stream.
