@@ -68,9 +68,9 @@ A concept that we expect frequent use of in this project is "Message Passing" an
 
 ### Data set or other source materials
 We will be using the following materials for this project:
-* Overtone Library, which can be found at https://overtone.github.io/
-* Max/MSP, which can be found at https://cycling74.com/
-* Arduino Interface, which can be found at https://www.arduino.cc/en/Main/Software
+* Overtone Library, which can be found at -  https://overtone.github.io/
+* Max/MSP, which can be found at -  https://cycling74.com/
+* Arduino Interface, which can be found at -  https://www.arduino.cc/en/Main/Software
 * External hardware
  * MIDI keyboard
  * Potentiometer
