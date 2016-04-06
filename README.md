@@ -49,17 +49,15 @@ Here is a more detailed description of this project's feature's.
  * Use the "unpack" function in Max to untangle the data and implement streams in synthesizer patch.
 
 ### Kevin Dibble @kdibble
-* Looping live MIDI input
- * Read in data from the keyboard and hand off to Overtone.
- * Have Overtone intrepret the data as it's own. For example, Overtone has transposing abilities so that given a certain melody and key, it can convert it to another key. We'll need to figure out how to represent the raw MIDI data of a keyboard in terms of Overtone's language.
-* Creating multi-track recording abilities
- * This will involve intricate communication with the Arduino's interface functions.
- * We'll need queues from buttons on the Arduino interface to toggle between MIDI modes:
-    * Recording. This involves adding a new instrument, MIDI stream, and instance of the Max synthesizer patch.
-      * Record button.
-      * Stop button.
-      * ... anything else? These could be modes on the same button or distinct buttons.
-    * Jamming. This should have it's own dedicated instrument stream.
+* Creating the state changes from the input to Overtone
+ * Read in data from the keyboard and hand off to Overtone. This conversion will be the "meat and potatoes" of my portion of the project. Using BPM as a guide, extract the MIDI notes and change them to a "sheet music" style of information that can be fed into Overtone.
+ * Have Overtone intrepret the data as it's own. For example, Overtone has transposing abilities so that given a certain melody and key, it can convert it to another key.
+* Looping live MIDI input through multi-track recording abilities
+ * This will involve intricate communication with the Arduino's interface functions, supplied by Alex.
+ * Recorded samples will be saved and replayed most likely in a recursive style
+In short: 
+Responsible for software backend to the state-changes.
+In charge of creating functions to implement live-looping
 
 ### Analysis
 Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
