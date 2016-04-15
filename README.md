@@ -112,7 +112,15 @@ I think the first steps for our team are to:
  * Hardware connection from to Overtone to Max
  * Live MIDI input from keyboard to Overtone
  ```
-
+ George Update:
+ I had some change of direction with this milestone. The original plan was to communicate the non-MIDI data through virtual serial ports, but after lots of research I couldn't find a library or appropriate thrid-party software. So I decided to try passing texts files containing the non-MIDI data as I/O. This will be our means of communication between Racket and Max.
+ 
+ My first attempt was a little reaching and (now I know) uncessessary. I attempted to build a Max object that could recieve a formatted text file and parse it however we wanted. This was was way to much unecessary work as my Sound Synth professor kindly pointed out.
+ 
+ I came accross a much more elegant solution with involved the use of the Max objects "text", "unpack", and "filewatch". The first of the 3, "text", is what I'll use to access the file. The second, "unpack", recieves an arbritary number of inputs that each produce their own stream of data. The number of arguments to "unpack" will be decided by how many data points we need. Lastly, and my favorite, is the "filewatch" fucntion. This function is how we can make this I/O work in (seemingly) real-time with low CPU expenditure. "filewatch" has the ability to watch a file for any changes and report a bang whenever the file is altered. We can use this bang to re-read any data from the file and is much more easier on the CPU than having to continuously re-read the file.
+ 
+ I've uploaded my working Max patch which has the above work implemented. Now, as far as sending output from Racket, the language has something it calls "file-ports" which conveniently allows use of the C function "fprintf". This will work perfectly. I'm still working on the Racket portion of this connection so I don't have anything working yet. Shall fix that soon.
+ 
 ### Second Milestone (Fri Apr 22)
 What exactly will be turned in on this day? 
 
