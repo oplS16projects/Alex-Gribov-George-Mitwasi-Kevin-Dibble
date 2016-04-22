@@ -39,6 +39,11 @@
   (print "Still under development")
 )
 
+;; debug procedures
+(define buttons '(but0 but1 but2 but3))
+(define (getButtonData buttons)
+  '(1 0 0 0))
+
 (define (query-buttons)
   (let ((onButtons (getButtonData buttons)))
     (cond [(= 1 (car onButtons)) 'but0]
