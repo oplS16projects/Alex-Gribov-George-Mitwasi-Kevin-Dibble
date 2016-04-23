@@ -5,19 +5,19 @@
 (define (make-state-machine)
   (let ((state 'Main))
     (lambda (transition)
-      (cond [(eq? state 'Main) (cond [(eq? transition 'but1) (set! state 'Effects)]
-                                     [(eq? transition 'but2) (set! state 'SetLoop)]
-                                     [(eq? transition 'but3) (set! state 'PlayLoops)]
-                                     [(eq? transition 'but4) (toggleOnOff)])]
+      (cond [(eq? state 'Main) (cond [(eq? transition 'but0) (set! state 'Effects)]
+                                     [(eq? transition 'but1) (set! state 'SetLoop)]
+                                     [(eq? transition 'but2) (set! state 'PlayLoops)]
+                                     [(eq? transition 'but3) (toggleOnOff)])]
             [(eq? state 'Effects) (begin (set! state 'Main) (change-eff transition))]
-            [(eq? state 'SetLoop) (cond [(eq? transition 'but1) (set! state 'FIXME)]
+            [(eq? state 'SetLoop) (cond [(eq? transition 'but0) (set! state 'FIXME)]
+                                     [(eq? transition 'but1) (set! state 'FIXME)]
                                      [(eq? transition 'but2) (set! state 'FIXME)]
-                                     [(eq? transition 'but3) (set! state 'FIXME)]
-                                     [(eq? transition 'but4) (set! state 'FIXME)])]
-            [(eq? state 'PlayLoops) (cond [(eq? transition 'but1) (set! state 'FIXME)]
+                                     [(eq? transition 'but3) (set! state 'FIXME)])]
+            [(eq? state 'PlayLoops) (cond [(eq? transition 'but0) (set! state 'FIXME)]
+                                     [(eq? transition 'but1) (set! state 'FIXME)]
                                      [(eq? transition 'but2) (set! state 'FIXME)]
-                                     [(eq? transition 'but3) (set! state 'FIXME)]
-                                     [(eq? transition 'but4) (set! state 'FIXME)])]
+                                     [(eq? transition 'but3) (set! state 'FIXME)])]
             [(eq? state 'FIXME) (FIXME)])
       (print state)
       state
