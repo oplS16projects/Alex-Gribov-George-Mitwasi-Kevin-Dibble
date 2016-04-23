@@ -8,16 +8,19 @@
       (cond [(eq? state 'Main) (cond [(eq? transition 'but0) (set! state 'Effects)]
                                      [(eq? transition 'but1) (set! state 'SetLoop)]
                                      [(eq? transition 'but2) (set! state 'PlayLoops)]
-                                     [(eq? transition 'but3) (toggleOnOff)])]
+                                     [(eq? transition 'but3) (toggleOnOff)]
+                                     [(eq? transition 'none) (FIXME)])] ;; This should query buttons and go back to checking cond -- Gribs
             [(eq? state 'Effects) (begin (set! state 'Main) (change-eff transition))]
             [(eq? state 'SetLoop) (cond [(eq? transition 'but0) (set! state 'FIXME)]
                                      [(eq? transition 'but1) (set! state 'FIXME)]
                                      [(eq? transition 'but2) (set! state 'FIXME)]
-                                     [(eq? transition 'but3) (set! state 'FIXME)])]
+                                     [(eq? transition 'but3) (set! state 'FIXME)]
+                                     [(eq? transition 'none) (FIXME)])] ;; This should query buttons and go back to checking cond
             [(eq? state 'PlayLoops) (cond [(eq? transition 'but0) (set! state 'FIXME)]
                                      [(eq? transition 'but1) (set! state 'FIXME)]
                                      [(eq? transition 'but2) (set! state 'FIXME)]
-                                     [(eq? transition 'but3) (set! state 'FIXME)])]
+                                     [(eq? transition 'but3) (set! state 'FIXME)]
+                                     [(eq? transition 'none) (FIXME)])] ;; This should query buttons and go back to checking cond
             [(eq? state 'FIXME) (FIXME)])
       (print state)
       state
