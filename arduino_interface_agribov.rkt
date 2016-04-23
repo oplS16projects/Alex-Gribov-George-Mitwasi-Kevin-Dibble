@@ -51,36 +51,46 @@
       )
   )
 
+;; Inputs a list of lights, and then at least one index, turns off the lights referenced by that index (0-n)
+(define (lightsOff lights ind . rest)
+  (digital-write (list-ref lights ind) LOW)
+  (if (not (null? rest))
+      (lightsOff lights (car rest) (cdr rest))
+      0
+      )
+  )
+
+;; Inputs a list of lights, and then at least one index, turns on the lights referenced by that index (0-n)
+(define (lightsFlash lights ind . rest)
+  (for-each (λ (x) (digital-write (x) HIGH)) lights)
+  )
+
 ;; This function initializes ASIP and communication with the board
-(define initializeBoard 
+(define (initializeBoard lights buttons)
   (λ ()
     (open-asip)  
-    ;; Setting 3 pins to OUTPUT_MODE
-    (set-pin-mode led0 OUTPUT_MODE)
-    (set-pin-mode led1 OUTPUT_MODE)
-    (set-pin-mode led2 OUTPUT_MODE)
-    (set-pin-mode led3 OUTPUT_MODE)
-    
-    (set-pin-mode but0 INPUT_PULLUP_MODE)
-    (set-pin-mode but1 INPUT_PULLUP_MODE)
-    (set-pin-mode but2 INPUT_PULLUP_MODE)
-    (set-pin-mode but3 INPUT_PULLUP_MODE)
-    ;(set-pin-mode potA INPUT_MODE)
-    ;(set-pin-mode potB INPUT_MODE)
+    ;; Setting lights to OUTPUT_MODE
+    (for-each (λ (led) (set-pin-mode led OUTPUT_MODE)) lights)
 
-    ;; Analog pins on Arduino UNO do not need to
+    ;; Setting buttons to Pull-up mode (LOW is pressed, HIGH is released)
+    (for-each (λ (button) (set-pin-mode button INPUT_PULLUP_MODE)) buttons)
+
+    ;; Analog (knob) pins on Arduino UNO do not need to
     ;; be initialised in the current version of ASIP.
     ;; Their value is reported every 50 ms
   
     ;; Turning the three pins off
-    (map (λ (x) (digital-write x LOW)) (list led1 led2 led3 led0))
+    (lightsOff lights)
     
-    ) ;; end of lambda
-  ) ;; end of setup
+    )
+  )
 
 (define curInput null)
 (define oldInput null)
 
+;; Original control function
+;; This started as sample code from the libraries, but turned into my (Gribov) experimental
+;; playground function that I used to figure out how this library works, and I use it to debug issues.
 (define boardCtrl
   (λ ()
     (set! curInput (digital-read but0))
@@ -111,7 +121,7 @@
   )
 )
 
-;; Original control function
+;; Another old experimental function. Kept here for historic reference.
 (define lightCtrl
   ;;(set! curInput (digital-read inputPin))
   (if (not (equal? curInput oldInput))
@@ -134,6 +144,6 @@
       )
   )
 
-(initializeBoard)
+(initializeBoard lights buttons)
 ;(lightsOn lights 1)
 ;;(boardCtrl)
