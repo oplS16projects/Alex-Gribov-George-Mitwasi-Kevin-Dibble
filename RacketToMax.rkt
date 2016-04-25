@@ -23,10 +23,51 @@
 ;   this      - 'truncate/replace : try 'truncate; if it fails (permissions?)
 ;                                   try 'replace
 
+; --- Data Map ---
+; Slot  Description     Values
+;  1     play note      0 or 1
+;  2     set duration   0 - 5000
+;  3     change pitch   this changes pitch in MIDI, so 48 would be Middle C
+;  4     pick preset    0 is no preset, and 1 - 3 are the actual presets
+
 (current-output-port out) ; this determines a default output port for many Racket
                           ; procedures, like 'write'
 
-(fprintf (current-output-port)
-         "8 9 10 11")
+;(fprintf (current-output-port)
+;         "1 3000 48 1")
+
+;(define test1 0)
+;(define test2 1)
+;(define test3 2)
+;(define test4 3)
+;
+;(fprintf (current-output-port)
+;         "~a ~a ~a ~a" test1 test2 test3 test4)
+
+;this function doesn't work yet...
+(define (data note duration pitch preset)
+  (define (printdata)
+    (fprintf (current-output-port) "~a ~a ~a ~a" note duration pitch preset))
+                     ; (display note)
+                     ; (display duration)
+                     ; (display pitch)
+                     ; (display preset))
+  (define (playnote)
+    (set! note 1)
+    (printdata)
+    (set! note 0)) ; end playnote
+  (define (setduration n)
+    (set! duration n)
+    (printdata)) ; end set duration
+  (define (setpitch n)
+    (set! pitch n)
+    (printdata)) ; end set pitch
+  (define (dispatch message)
+    (cond ((eqv? message 'print)(printdata))
+          ((eqv? message 'playnote)(playnote))
+          ((eqv? message 'setduration)(setduration))
+          (else (display "Invalid request"))) ; end cond statement
+  dispatch) ; end dispatch
+  ) ; end object definition
 
 (close-output-port out)
