@@ -44,7 +44,6 @@
 ;(fprintf (current-output-port)
 ;         "~a ~a ~a ~a" test1 test2 test3 test4)
 
-;this function doesn't work yet...
 (define (data note duration pitch preset)
   (define (printdata)
     (fprintf (current-output-port) "~a ~a ~a ~a" note duration pitch preset))
@@ -55,17 +54,23 @@
   (define (playnote)
     (set! note 1)
     (printdata)
-    (set! note 0)) ; end playnote
+    (set! note 0)
+    (printdata)) ; end playnote
   (define (setduration n)
     (set! duration n)
     (printdata)) ; end set duration
   (define (setpitch n)
     (set! pitch n)
     (printdata)) ; end set pitch
+  (define (setpreset n)
+    (set! preset n)
+    (printdata)) ; end set preset
   (define (dispatch message)
     (cond ((eqv? message 'print)(printdata))
           ((eqv? message 'playnote)(playnote))
           ((eqv? message 'setduration)(setduration))
+          ((eqv? message 'setpitch)(setpitch))
+          ((eqv? message 'setpreset)(setpreset))
           (else (display "Invalid request"))) ; end cond statement
   dispatch) ; end dispatch
   ) ; end object definition
