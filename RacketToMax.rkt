@@ -1,6 +1,8 @@
 #lang racket/base
 
-(define out (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate))
+(define append (open-output-file "readthis.txt" #:mode 'text #:exists 'append))
+(define truncate (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate))
+
 ; Notes on the type of identifiers we have to use
 ;
 ;  #:mode (this specifies how bytes written to the port
@@ -30,7 +32,7 @@
 ;  3     change pitch   this changes pitch in MIDI, so 48 would be Middle C
 ;  4     pick preset    0 is no preset, and 1 - 3 are the actual presets
 
-(current-output-port out) ; this determines a default output port for many Racket
+(current-output-port append) ; this determines a default output port for many Racket
                           ; procedures, like 'write'
 
 ;(fprintf (current-output-port)
@@ -44,35 +46,50 @@
 ;(fprintf (current-output-port)
 ;         "~a ~a ~a ~a" test1 test2 test3 test4)
 
-(define (data note duration pitch preset)
-  (define (printdata)
-    (fprintf (current-output-port) "~a ~a ~a ~a" note duration pitch preset))
-                     ; (display note)
-                     ; (display duration)
-                     ; (display pitch)
-                     ; (display preset))
-  (define (playnote)
-    (set! note 1)
-    (printdata)
-    (set! note 0)
-    (printdata)) ; end playnote
-  (define (setduration n)
-    (set! duration n)
-    (printdata)) ; end set duration
-  (define (setpitch n)
-    (set! pitch n)
-    (printdata)) ; end set pitch
-  (define (setpreset n)
-    (set! preset n)
-    (printdata)) ; end set preset
-  (define (dispatch message)
-    (cond ((eqv? message 'print)(printdata))
-          ((eqv? message 'playnote)(playnote))
-          ((eqv? message 'setduration)(setduration))
-          ((eqv? message 'setpitch)(setpitch))
-          ((eqv? message 'setpreset)(setpreset))
-          (else (display "Invalid request"))) ; end cond statement
-  dispatch) ; end dispatch
-  ) ; end object definition
+;(define (data note duration pitch preset)
+;  (define (printdata)
+;    (fprintf (current-output-port) "~a ~a ~a ~a" note duration pitch preset))
+;  (define (playnote)
+;    (begin (set! note 1)
+;           (printdata)
+;           (set! note 0)
+;           printdata)) ; end playnote
+;  (define (setduration n)
+;    (begin (set! duration n)
+;           printdata)) ; end set duration
+;  (define (setpitch n)
+;    (begin (set! pitch n)
+;           printdata)) ; end set pitch
+;  (define (setpreset n)
+;    (begin (set! preset n)
+;           printdata)) ; end set preset
+;  (define (dispatch message)
+;    (cond ((eqv? message 'print) printdata)
+;          ((eqv? message 'playnote) playnote)
+;          ((eqv? message 'setduration) setduration)
+;          ((eqv? message 'setpitch) setpitch)
+;          ((eqv? message 'setpreset) setpreset)
+;          (else (display "Invalid request"))) ; end cond statement
+;  dispatch) ; end dispatch
+;  ) ; end object definition
 
-(close-output-port out)
+; constructor
+
+; accessor functions
+(define playnote car)
+(define duration cadr)
+(define pitch caddr)
+(define preset cadddr)
+
+; print function
+(define (printdata data)
+  (begin (current-output-port truncate)
+         (fprintf (current-output-port) " ")
+         (current-output-port append)
+         (for-each (lambda (x)
+                     (fprintf (current-output-port)
+                                "~a " x)) data)))
+
+; mutator / display functions
+
+; (close-output-port out)
