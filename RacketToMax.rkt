@@ -1,33 +1,35 @@
 #lang racket/base
 (require racket/mpair)
 
-; Notes on the type of identifiers we have to use -
-;   #:mode (this specifies how bytes written to the port
-;           are translated when written to the file)
-;    this      - 'binary : bytes are written to the file exactly as written to the port
-;              - 'text : on Windows, a linefeed byte (10) written to the port is
-;                        translated to a return-linefeed combination in the file;
-;                        no filtering occures for return.
+; Notes on the type of identifiers we have to use
+
+;  #:mode (this specifies how bytes written to the port
+;          are translated when written to the file)
+;   this      - 'binary : bytes are written to the file exactly as written to the port
+;             - 'text : on Windows, a linefeed byte (10) written to the port is
+;                       translated to a return-linefeed combination in the file;
+;                       no filtering occures for return.
 ;
-;   #:exists (this tells us what to do if the file already exist) 
-;              - 'append : on Windows this is the same as update except
-;                          that the file doesn't need to already exist,
-;                          and the file position is immediately set to the EOF
-;                          after opening.
-;              - 'update : open an existing file without truncating it;
-;                          if the file doesn't exist throw an exception;
-;                          use the file-position to change the current read/write pos
-;    this      - 'replace : remove the old file, if it exists, and write a new one
-;    this      - 'truncate : remove all old data, if the file exists
-;    this      - 'truncate/replace : try 'truncate; if it fails (permissions?)
-;                                    try 'replace
+;  #:exists (this tells us what to do if the file already exist) 
+;             - 'append : on Windows this is the same as update except
+;                         that the file doesn't need to already exist,
+;                         and the file position is immediately set to the EOF
+;                         after opening.
+;             - 'update : open an existing file without truncating it;
+;                         if the file doesn't exist throw an exception;
+;                         use the file-position to change the current read/write pos
+;   this      - 'replace : remove the old file, if it exists, and write a new one
+;   this      - 'truncate : remove all old data, if the file exists
+;   this      - 'truncate/replace : try 'truncate; if it fails (permissions?)
+;                                   try 'replace
 
 ; --- Data Map ---
 ; Slot  Description     Values
 ;  1     play note      0 or 1
 ;  2     set duration   0 - 5000
-;  3     change pitch   this changes pitch in MIDI, so 48 would be Middle C
-;  4     pick preset    0 is no preset, and 1 - 3 are the actual presets
+;  3     set pitch      this changes pitch in MIDI, so 48 would be Middle C
+;  4     set waveform   options are 
+;  5     set preset     0 is no preset, and 1 - 3 are the actual presets
 
 ; (define out (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate))
 ; (define out (open-output-file "readthis.txt"))
@@ -74,11 +76,12 @@
 ;  ) ; end object definition
 
 ; default constructor
-(define musicdata (mlist 0 1000 48 0))
+(define musicdata (mlist 0 1000 48 0 0))
 ; these are the default values
 ;   - note is toggled OFF
 ;   - duration is 1000
 ;   - pitch is 48, or middle-C
+;   - waveform is set to 0, which is nothing
 ;   - preset is 0, which is no preset
 
 ; print function
@@ -86,32 +89,66 @@
   (begin (define out (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate)) ; initialize fileport
          (current-output-port out) ; set it as the current fileport
          (fprintf (current-output-port)
-           "~a ~a ~a ~a"
-           (mcar musicdata)                      ; print notetoggle
-           (mcar (mcdr musicdata))               ; print duration
-           (mcar (mcdr (mcdr musicdata)))        ; print pitch 
-           (mcar (mcdr (mcdr (mcdr musicdata))))) ; print preset
+           "~a ~a ~a ~a ~a"
+           (mcar musicdata)                               ; print notetoggle
+           (mcar (mcdr musicdata))                        ; print duration
+           (mcar (mcdr (mcdr musicdata)))                 ; print pitch 
+           (mcar (mcdr (mcdr (mcdr musicdata))))         ; print waveform
+           (mcar (mcdr (mcdr (mcdr (mcdr musicdata)))))) ; print preset
          (close-output-port out))) ; close fileport (the printing actually happens here)
 
 (send) ; call this function once to ensure that "readme.txt" exists
 
 ; mutator / display functions
 (define (playnote)
-  (begin (set-mcar! musicdata 0) ; toggle noteplay ON
-         (send)
-         (set-mcar! musicdata 1) ; toggle noteplay OFF
+  (begin (set-mcar! musicdata 1) ; toggle noteplay ON
          (send)))
+
+(define (stopnote)
+    (begin (set-mcar! musicdata 0) ; toggle noteplay OFF
+           (send)))
 
 (define (setduration n)
   (begin (set-mcar! (mcdr musicdata) n) ; update duration
-         (send)))
+         (stopnote)))
 
 (define (setpitch n)
   (begin (set-mcar! (mcdr (mcdr musicdata)) n) ; update pitch
-         (send)))
+         (stopnote)))
+
+(define (setwaveform n)
+  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) n) ; update waveform with #
+         (stopnote)))
+
+(define (setwaveforms message)
+  (cond [(eqv? message 'white) (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 1) ; set waveform to white noise
+                                      (stopnote))]
+        [(eqv? message 'pink)  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 2) ; set waveform to pink noise
+                                      (stopnote))]
+        [(eqv? message 'sin)   (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 3) ; set waveform to sin wave
+                                      (stopnote))]
+        [(eqv? message 'tri)   (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 4) ; set waveform to triangle wave
+                                      (stopnote))]
+        [(eqv? message 'rect)  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 5) ; set waveform to rectangle wave
+                                      (stopnote))]))
+
+; Data Map
+; 0 = NILL
+; 1 = white noise
+; 2 = pink noise
+; 3 = sin wave
+; 4 = triangle wave
+; 5 = rectange wave 
 
 (define (setpreset n)
-  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) n) ; update preset
-          (print)))
+    (begin (set-mcar! (mcdr (mcdr (mcdr (mcdr musicdata)))) n) ; update preset
+           (stopnote)))
+
+(define (setdefault)
+  (begin (set-mcar! musicdata 0)
+         (set-mcar! (mcdr musicdata) 1000)
+         (set-mcar! (mcdr (mcdr musicdata)) 48)
+         (set-mcar! (mcdr (mcdr (mcdr musicdata))) 0);
+         (send)))
 
 ; (close-output-port out)
