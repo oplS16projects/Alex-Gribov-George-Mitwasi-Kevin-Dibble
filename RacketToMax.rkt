@@ -76,6 +76,7 @@
 ;  ) ; end object definition
 
 ; default constructor
+(provide musicdata)
 (define musicdata (mlist 0 1000 48 0 0))
 ; these are the default values
 ;   - note is toggled OFF
@@ -85,6 +86,7 @@
 ;   - preset is 0, which is no preset
 
 ; print function
+(provide send)
 (define (send)
   (begin (define out (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate)) ; initialize fileport
          (current-output-port out) ; set it as the current fileport
@@ -100,26 +102,32 @@
 (send) ; call this function once to ensure that "readme.txt" exists
 
 ; mutator / display functions
+(provide playnote)
 (define (playnote)
   (begin (set-mcar! musicdata 1) ; toggle noteplay ON
          (send)))
 
+(provide stopnote)
 (define (stopnote)
     (begin (set-mcar! musicdata 0) ; toggle noteplay OFF
            (send)))
 
+(provide setduration)
 (define (setduration n)
   (begin (set-mcar! (mcdr musicdata) n) ; update duration
          (stopnote)))
 
+(provide setduration)
 (define (setpitch n)
   (begin (set-mcar! (mcdr (mcdr musicdata)) n) ; update pitch
          (stopnote)))
 
+(provide setwaveform)
 (define (setwaveform n)
   (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) n) ; update waveform with #
          (stopnote)))
 
+(provide setwaveforms)
 (define (setwaveforms message)
   (cond [(eqv? message 'white) (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 1) ; set waveform to white noise
                                       (stopnote))]
@@ -139,11 +147,12 @@
 ; 3 = sin wave
 ; 4 = triangle wave
 ; 5 = rectange wave 
-
+(provide setPreset)
 (define (setPreset n)
     (begin (set-mcar! (mcdr (mcdr (mcdr (mcdr musicdata)))) n) ; update preset
            (stopnote)))
 
+(provide setPreset)
 (define (setDefault)
   (begin (set-mcar! musicdata 0)
          (set-mcar! (mcdr musicdata) 1000)

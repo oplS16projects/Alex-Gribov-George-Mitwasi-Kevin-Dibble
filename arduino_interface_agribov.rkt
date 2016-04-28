@@ -20,21 +20,25 @@
 (define potB 3)
 
 ;; Define groups
+(provide buttons)
 (define buttons
   (list but0 but1 but2 but3)
   )
 
+(provide lights)
 (define lights
   (list led0 led1 led2 led3)
   )
 
 ;; Helper functions
 ;; getButtonData inputs a list of buttons, and outputs a list of their on/off data
+(provide getButtonData)
 (define (getButtonData buttonList)
   (map (λ (button) (if (= (digital-read button) LOW) 1 0)) buttonList)
   )
 
 ;; Inputs a list of knobs, and outputs a list of their positions
+(provide getKnob)
 (define (getKnob knobList index)
   (if (= index 0)
       (analog-read (car knobList))
@@ -43,6 +47,7 @@
   )
 
 ;; Inputs a list of lights, and then at least one index, turns on the lights referenced by that index (0-n)
+(provide lightsOn)
 (define (lightsOn lights ind . rest)
   (digital-write (list-ref lights ind) HIGH)
   (if (not (null? rest))
@@ -52,6 +57,7 @@
   )
 
 ;; Inputs a list of lights, and then at least one index, turns off the lights referenced by that index (0-n)
+(provide lightsOff)
 (define (lightsOff lights ind . rest)
   (digital-write (list-ref lights ind) LOW)
   (if (not (null? rest))
@@ -64,11 +70,13 @@
   (lightsOff lights 
 
 ;; Inputs a list of lights, and then at least one index, turns on the lights referenced by that index (0-n)
+(provide lightsFlash)
 (define (lightsFlash lights ind . rest)
   (for-each (λ (x) (digital-write (x) HIGH)) lights)
   )
 
 ;; This function initializes ASIP and communication with the board
+(provide initializeBoard)
 (define (initializeBoard lights buttons)
   (λ ()
     (open-asip)  
@@ -94,6 +102,7 @@
 ;; Original control function
 ;; This started as sample code from the libraries, but turned into my (Gribov) experimental
 ;; playground function that I used to figure out how this library works, and I use it to debug issues.
+(provide boardCtrl)
 (define boardCtrl
   (λ ()
     (set! curInput (digital-read but0))
@@ -125,6 +134,7 @@
 )
 
 ;; Another old experimental function. Kept here for historic reference.
+(provide lightCtrl)
 (define lightCtrl
   ;;(set! curInput (digital-read inputPin))
   (if (not (equal? curInput oldInput))
