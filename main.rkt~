@@ -1,7 +1,6 @@
 #lang racket
 ;(require "arduino_interface_agribov.rkt")
-(require "RacketToMax.rkt")git clone https://github.com/oplS16projects/Alex-Gribov-George-Mitwasi-Kevin-Dibble
-
+(require "RacketToMax.rkt")
 
 (define (make-state-machine)
   (let ((state 'Main))
@@ -36,7 +35,7 @@
   )
 
 (define (change-eff button)
-  (setPreset button)
+  (FIXME)
   )
 
 (define (FIXME)

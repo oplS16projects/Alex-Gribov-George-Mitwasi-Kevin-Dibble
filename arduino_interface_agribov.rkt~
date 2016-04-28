@@ -60,9 +60,6 @@
       )
   )
 
-(define (allLightsOff lights
-  (lightsOff lights 
-
 ;; Inputs a list of lights, and then at least one index, turns on the lights referenced by that index (0-n)
 (define (lightsFlash lights ind . rest)
   (for-each (λ (x) (digital-write (x) HIGH)) lights)

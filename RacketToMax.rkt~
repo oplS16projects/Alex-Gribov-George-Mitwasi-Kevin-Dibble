@@ -140,11 +140,11 @@
 ; 4 = triangle wave
 ; 5 = rectange wave 
 
-(define (setPreset n)
+(define (setpreset n)
     (begin (set-mcar! (mcdr (mcdr (mcdr (mcdr musicdata)))) n) ; update preset
            (stopnote)))
 
-(define (setDefault)
+(define (setdefault)
   (begin (set-mcar! musicdata 0)
          (set-mcar! (mcdr musicdata) 1000)
          (set-mcar! (mcdr (mcdr musicdata)) 48)
