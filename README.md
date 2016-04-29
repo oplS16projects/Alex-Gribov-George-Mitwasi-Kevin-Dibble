@@ -1,138 +1,53 @@
-# Lambda Looper
+##Authors
+Alex Gribov
+George Mitwasi
+Kevin Dibble
 
 ### Overview
-This project uses Racket to bridge together an algorithmic music composition library (Overtone), with a digital sound synthesis software (Max/MSP), and an open-source hardware platform (Arduino) to create a novel music composition tool. Overtone is a library that uses high-level procedural algorithms to generate MIDI output. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands and MIDI input through various sources, provide the user a variety of functions and to that manipulate their input and control the sound, then send the data to Max, where it will be processed into sound, and output through the speakers.
+This project uses Racket to bridge together an open-source hardware platform (Arduino) with a digital sound synthesis software (Max/MSP) to create a novel music editing tool. Max offers the capability to create a custom audio synthesizer, which can be controlled by MIDI input and external hardware (Note: this is a separate project that our team member George is doing for a different class). What our Racket program will do is take in user commands through the Arduino, keep track of the system's state and interacti with the MAX synthesiser. The MIDI data will be supplied to the synthesiser through MIDI input where the sound is modified through using the state of the racket program.
 
 ## Diagram and Detailed Description
-![OPL FP Diagram](https://github.com/oplS16projects/George-Mitwasi-Alex-Gribov-Kevin-Dibble/blob/master/OPL%20FP%20diagram.jpg)
+![OPL FP Diagram](https://github.com/oplS16projects/George-Mitwasi-Alex-Gribov-Kevin-Dibble/blob/master/SystemStateDiagram.jpg)
 
+##Concepts Demonstrated
+* **Message Passing** is used in the state machine to allow the system to react to a persistent state value.
+* **Tail Recursion** The main control loop uses tail recursion to allow looping without space issues.
+* **Object Oriented Programming** is used to pass data to MAX and provide encapsulated interfaces to do so.
+* ****
 
-Here is a more detailed description of this project's feature's.
-* MIDI input from a keyboard
-  * We will use the Clojure library Overtone to recieve MIDI input from a physical keyboard connected via USB, interpret the data inside Overtone, and output the MIDI data to Max through a virtual MIDI port.
-  * The cool part is that we can process the MIDI input in Racket before sending it to Max to create the sound. For example, when I play a melody on the keyboard, we could transpose the melody to a different key before sending it to Max for sound generation.
-* Live looping
-  * The code we will write in Racket will enable the user to record a sequence of notes from their MIDI keyboard with a push of a button.
-  * With the loop recorded, it will be sent through its own MIDI channel to its unique instnace of Max where it can be altered independent of other loops or live sounds.
-* Control of sounds presets and sequences with physical buttoms
-  * One use of the buttons is to choose a sound preset. The Max patch thwill have built in sound presets availabel to the user for selection.
-  * In addtion, the user may use the buttons to record MIDI input and assign it to a button so that it can be replicate with a push.
-* Potentiometer control
-  * What's the difference between the sound of a trumpet and that of a guitar if they're playing the same note? The answer is their unique timbre. There are many factors that affect the timbre, or quality of a sound, and small changes in data can drastically afect the generated sound. Synthesizers use a series of signal processing units such as oscillators, envelopes, and modulation to craft a sound. Our project will allow these parameters in Max to be controlled by potentiometers, so that the turning of a physical knob can alter the sound output from a particular module. Here are some things we'd like to control with the potentiometer:
-    * Frequency of oscilllators. An oscillator is a repeating waveform with a fundamental frequency and peak amplitude. Organic sounds found in nature take thousands of oscillators for recreation, but we'd like to implemnent 5 oscillators.
-    * Subtractive synthesis. This is the removing of frequencies to carve a desired sound.
+##External Technology and Libraries
+Briefly describe the existing technology you utilized, and how you used it. Provide a link to that technology(ies).
+**Arduino Microprocessor** https://www.arduino.cc/ This was used to implement the user interactions
+** MAX MSP** https://cycling74.com/products/max/ This was used to produce and edit sounds
 
-## Group Responsibilities
-
-### Alex Gribov @agribov (Team Lead)
-*	Design a circuit of potentiometers, lights, and buttons that will connect to an Arduino, and write Racket code that will both send and receive data from the buttons. 
-* Data from Arduino:
- * Buttons send digital I/O signal, which can be used to turn on and off any preset, or effect on the synthesizer.
- * Potentiometer sends analog signal, which Racket will read and convert to an output on a 0-100 scale. This can be used to control variable effects such as timbre and volume.
- * Touchscreen can be used in place of knobs.
-* Data to Arduino:
- * I/O signals to turn on and off LED’s representing various effects in the software.
-*	Create state-change map for buttons and potentiometers. When a button is pushed, it puts the program into a specific state, and flashes lights to represent that state. See Workflow example below.
-
-### George Mitwasi @georgemitwasi
-* Interface Max with Racket so Max can recieve MIDI input.
- * Create a virtual MIDI port in Overtone
- * Use "midiin" or "notein" function in Max to select the above virtual port and recieve MIDI data
-* Interface Max with Racket so Max can recieve hardware data for sound design.
- * Create a Schema to organize the data in a specific way.
-  * Before we do this we have to be sure of what data we'd like to send to Max. This is the list thus far:
-    * Volume control
-    * Oscilator pitches
-    * Oscilator amplitudes
-    * Subtractive synthesis envelope
- * "pack" the data in Racket using the pre-defined Schema.
- * Use the "unpack" function in Max to untangle the data and implement streams in synthesizer patch.
-
-### Kevin Dibble @kdibble
-* Creating the state changes from the input to Overtone
- * Read in data from the keyboard and hand off to Overtone. This conversion will be the "meat and potatoes" of my portion of the project. Using BPM as a guide, extract the MIDI notes and change them to a "sheet music" style of information that can be fed into Overtone.
- * Have Overtone intrepret the data as it's own. For example, Overtone has transposing abilities so that given a certain melody and key, it can convert it to another key.
-* Looping live MIDI input through multi-track recording abilities
- * This will involve intricate communication with the Arduino's interface functions, supplied by Alex.
- * Recorded samples will be saved and replayed most likely in a recursive style
-In short: 
-Responsible for software backend to the state-changes.
-In charge of creating functions to implement live-looping
-
-### Analysis
-Explain what approaches from class you will bring to bear on the project. Be explicit: e.g., will you use recursion? How? Will you use map/filter/reduce? How? Will you use data abstraction? Will you use object-orientation? Will you use functional approaches to processing your data? Will you use state-modification approaches? A combination?
-
-A few concepts that we expect frequent use of are "Message Passing" and "State Modification". They're necesssary for the communication protocols between our various tools. Another concept we expect use of is "recursion". The looping of live MIDI input is the most obvious use recursion, and we expect to find use for it in the rest of the project.
-
-### Data set or other source materials
-We will be using the following materials for this project:
-* Overtone Library, which can be found at -  https://overtone.github.io/
-* Max/MSP, which can be found at -  https://cycling74.com/
-* Arduino Interface, which can be found at -  https://www.arduino.cc/en/Main/Software
-* External hardware
- * MIDI keyboard
- * Potentiometer
-
-### Deliverable and Demonstration
-In the end we'll have a powerful music composition tool capable of algorithmic song writing, live input, and sound design. For our demonstration, our team will build a song from the ground up while explaining the tools along the way.
-
-Here's an example of the type of workflow to expect when using this tool:
-* Record button is pushed. Channels 1-4 buttons start flashing. (Now in "Choose Channel" state)
-* Channel 1 button is pushed, it holds steady light, other buttons shut off (Record sequence state)
-* A sequence is played on the keyboard.
-* Record button is pushed again, this time to end the sequence. Sequence is saved as "Channel 1". Lights resume normal function, state is set to default.
-* MIDI sequence is now stored.
-* Channel 1 button is pushed (Channel light turns on to show that there's a state change). Sequence loops.
-* Button to assign effect is pushed.
-* All unassigned buttons light up.
-* One of those is pushed.
-* The pushed button startes flashing to signal that it's ready for programming.
-* User types the name of the function he'd like to assign the button to. For example: Trumpet.
-* Button stops flashing, assingment complete.
-* User pushed newley made "Trumpet" button. (Channel buttons flash to signify "Choose Channel" state)
-* User pushed Channel 1 button, it goes back to the previous state, now with the Trumpet preset selected.
-
-### Evaluation of Results
-Success in songwriting and sound design using our unique music composition tool. Our tool should be able to successfully use buttons (Alex), to walk through a state diagram (Kevin/Alex), which sets up a loop (Kevin/George), which sends signals to a digital synth and creats sound (George).
-
-## Schedule
-
-### First Milestone (Fri Apr 15)
-
-**Alex**: Arduino circuit complete, sending and receiving data to/from Racket.
-**George**: Keyboard sending sound through Racket to synth. Data in Racket can be used to apply effects to synth.
-**Kevin**: State change map complete.
-
-//What George wrote previously, for reference:
+##Favorite Scheme Expressions
+####Kevin Dibble
+My favorite part of the project was the state machine. I've enjoy state machines ever since I learned how to build them in Computing IV, so I was hapyp to be able to write one for this project.
 ```
-I think the first steps for our team are to:
-* Become very familiar with the Overtone Library
-* Establish and test the connections between each section of the project. We all understand our individual responsibilities well so the hardest part seems to be combining it all together. If we can make this happen the hardest part is over.
- * MIDI connection from Overtone to Max
- * Hardware connection from to Overtone to Max
- * Live MIDI input from keyboard to Overtone
- ```
- **George Update 1:**
- I had some change of direction with this milestone. The original plan was to communicate the non-MIDI data through virtual serial ports, but after lots of research I couldn't find a library or appropriate thrid-party software. So I decided to try passing texts files containing the non-MIDI data as I/O. This will be our means of communication between Racket and Max.
- 
- My first attempt was a little reaching and (now I know) uncessessary. I attempted to build a Max object that could recieve a formatted text file and parse it however we wanted. This was was way to much unecessary work as my Sound Synth professor kindly pointed out.
- 
- I came accross a much more elegant solution with involved the use of the Max objects "text", "unpack", and "filewatch". The first of the 3, "text", is what I'll use to access the file. The second, "unpack", recieves an arbritary number of inputs that each produce their own stream of data. The number of arguments to "unpack" will be decided by how many data points we need. Lastly, and my favorite, is the "filewatch" fucntion. This function is how we can make this I/O work in (seemingly) real-time with low CPU expenditure. "filewatch" has the ability to watch a file for any changes and report a bang whenever the file is altered. We can use this bang to re-read any data from the file and is much more easier on the CPU than having to continuously re-read the file.
- 
- I've uploaded my working Max patch which has the above work implemented. Now, as far as sending output from Racket, the language has something it calls "file-ports" which conveniently allows use of the C function "fprintf". This will work perfectly. I'm still working on the Racket portion of this connection so I don't have anything working yet. Shall fix that soon.
- 
- **George Update 2:**
- Successfully created a Racket-Max connection for non-MIDI data! All the goals from the above update have been completed. My next goals are to 1) Combine my Racket code with Alex's Arduino code. 2) Establish exactly what kind of data we want to communicate and then implement it into the Max patch. (I also need to fix some bugs in this patch) 3) Finalize Racket-Max connection for MIDI data.
- 
-### Second Milestone (Fri Apr 22)
-What exactly will be turned in on this day? 
+(define (make-state-machine)
+  (let ((state 'Main))
+    (lambda (transition)
+      (cond ...)
+      state
+      );;end lambda
+    );;end let
+  );;end define
+```
 
-**Alex**: Circuit controls software, state change feedbacks to circuit implemented.
-**George**: All effects implemented, 
-**Kevin**: Looper code is complete.
+####George Mitwasi
+
+####Alex Gribov
+
+###Detailed description
+* MIDI input from a keyboard through the MAX synth
+  * We will use the Arduino to interface with the user and Racket to interface with the MAX Synthesiser. A physical user creates sound from a physical keyboard connected via MIDI to MAX where the sound is modified baised on the interactions with the Arduino.
+
+Under development features:
+* The state machine allows for additional phases including a pichbend state and a loop set state. These features were not able to be fully implemented however due to time constraints.
 
 
-### Final Presentation (last week of semester)
-What additionally will be done in the last chunk of time?
 
-Combining all of the previously completed functions into one programming, and working out any kinks.
+#How to Download and Run
+You may want to link to your latest release for easy downloading by people (such as Mark).
+
+Include what file to run, what to do with that file, how to interact with the app when its running, etc. 
