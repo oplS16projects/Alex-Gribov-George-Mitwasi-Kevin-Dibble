@@ -28,55 +28,12 @@
 ;  1     play note      0 or 1
 ;  2     set duration   0 - 5000
 ;  3     set pitch      this changes pitch in MIDI, so 48 would be Middle C
-;  4     set waveform   options are 
+;  4     set waveform   options are white, pink, sin, tri, or rect
 ;  5     set preset     0 is no preset, and 1 - 3 are the actual presets
-
-; (define out (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate))
-; (define out (open-output-file "readthis.txt"))
-
-; (current-output-port out) ; this determines a default output port for many Racket
-                          ; procedures, like 'write'
-
-;(fprintf (current-output-port)
-;         "1 3000 48 1")
-
-;(define test1 0)
-;(define test2 1)
-;(define test3 4)
-;(define test4 "pls work in interaction window...")
-;
-;(fprintf (current-output-port)
-;         "~a ~a ~a ~a" test1 test2 test3 test4)
-
-;(define (data note duration pitch preset)
-;  (define (printdata)
-;    (fprintf (current-output-port) "~a ~a ~a ~a" note duration pitch preset))
-;  (define (playnote)
-;    (begin (set! note 1)
-;           (printdata)
-;           (set! note 0)
-;           printdata)) ; end playnote
-;  (define (setduration n)
-;    (begin (set! duration n)
-;           printdata)) ; end set duration
-;  (define (setpitch n)
-;    (begin (set! pitch n)
-;           printdata)) ; end set pitch
-;  (define (setpreset n)
-;    (begin (set! preset n)
-;           printdata)) ; end set preset
-;  (define (dispatch message)
-;    (cond ((eqv? message 'print) printdata)
-;          ((eqv? message 'playnote) playnote)
-;          ((eqv? message 'setduration) setduration)
-;          ((eqv? message 'setpitch) setpitch)
-;          ((eqv? message 'setpreset) setpreset)
-;          (else (display "Invalid request"))) ; end cond statement
-;  dispatch) ; end dispatch
-;  ) ; end object definition
+;  6     pitchbend      values are 0 - 127 where 63.5 is the middlepoint for pitch up vs pitch down
 
 ; default constructor
-(define musicdata (mlist 0 1000 48 3 0))
+(define musicdata (mlist 0 1000 48 3 0 64))
 ; these are the default values
 ;   - note is toggled OFF
 ;   - duration is 1000
@@ -85,62 +42,53 @@
 ;   - preset is 0, which is no preset
 
 ; print function
-(provide send)
 (define (send)
   (begin (define out (open-output-file "readthis.txt" #:mode 'text #:exists 'truncate)) ; initialize fileport
          (current-output-port out) ; set it as the current fileport
          (fprintf (current-output-port)
-           "~a ~a ~a ~a ~a"
-           (mcar musicdata)                               ; print notetoggle
-           (mcar (mcdr musicdata))                        ; print duration
-           (mcar (mcdr (mcdr musicdata)))                 ; print pitch 
-           (mcar (mcdr (mcdr (mcdr musicdata))))         ; print waveform
-           (mcar (mcdr (mcdr (mcdr (mcdr musicdata)))))) ; print preset
+                  "~a ~a ~a ~a ~a ~a"
+                  (mcar musicdata)                                     ; print notetoggle
+                  (mcar (mcdr musicdata))                              ; print duration
+                  (mcar (mcdr (mcdr musicdata)))                       ; print pitch 
+                  (mcar (mcdr (mcdr (mcdr musicdata))))                ; print waveform
+                  (mcar (mcdr (mcdr (mcdr (mcdr musicdata)))))         ; print preset
+                  (mcar (mcdr (mcdr (mcdr (mcdr (mcdr musicdata))))))) ; print pitchbend
          (close-output-port out))) ; close fileport (the printing actually happens here)
 
 (send) ; call this function once to ensure that "readme.txt" exists
 
 ; mutator / display functions
-(provide playnote)
-(define (playnote)
-  (begin (set-mcar! musicdata 1) ; toggle noteplay ON
-         (send)
-         (sleep .0001)
-         (stopnote)))
-
-(provide stopnote)
-(define (stopnote)
-    (begin (set-mcar! musicdata 0) ; toggle noteplay OFF
+(define (noteON)
+    (begin (set-mcar! musicdata 1) ; toggle note ON
            (send)))
 
-(provide setduration)
+(define (noteOFF)
+    (begin (set-mcar! musicdata 0) ; toggle note OFF
+           (send)))
+
+(define (playnote)                 ; playnote toggles note ON and then OFF
+  (begin (noteON)
+         (sleep .01)
+         (noteOFF)))
+
 (define (setduration n)
-  (begin (set-mcar! (mcdr musicdata) n) ; update duration
-         (stopnote)))
+  (set-mcar! (mcdr musicdata) n)) ; update duration
 
-(provide setpitch)
 (define (setpitch n)
-  (begin (set-mcar! (mcdr (mcdr musicdata)) n) ; update pitch
-         (stopnote)))
+  (set-mcar! (mcdr (mcdr musicdata)) n)) ; update pitch
 
-(provide setwaveform)
 (define (setwaveform n)
-  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) n) ; update waveform with #
-         (stopnote)))
+  (set-mcar! (mcdr (mcdr (mcdr musicdata))) n)) ; update waveform with #
 
-(provide setwaveforms)
-(define (setwaveforms message)
-  (cond [(eqv? message 'white) (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 1) ; set waveform to white noise
-                                      (stopnote))]
-        [(eqv? message 'pink)  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 2) ; set waveform to pink noise
-                                      (stopnote))]
-        [(eqv? message 'sin)   (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 3) ; set waveform to sin wave
-                                      (stopnote))]
-        [(eqv? message 'tri)   (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 4) ; set waveform to triangle wave
-                                      (stopnote))]
-        [(eqv? message 'rect)  (begin (set-mcar! (mcdr (mcdr (mcdr musicdata))) 5) ; set waveform to rectangle wave
-                                      (stopnote))]))
-
+(define (setwaveforms message)                        ; update waveform with a string
+  (cond [(eqv? message 'white) (set-mcar! (mcdr (mcdr (mcdr musicdata))) 1)] ; set waveform to white noise
+        [(eqv? message 'pink)  (set-mcar! (mcdr (mcdr (mcdr musicdata))) 2)] ; set waveform to pink noise
+        [(eqv? message 'sin)   (set-mcar! (mcdr (mcdr (mcdr musicdata))) 3)] ; set waveform to sin wave
+        [(eqv? message 'tri)   (set-mcar! (mcdr (mcdr (mcdr musicdata))) 4)] ; set waveform to triangle wave
+        [(eqv? message 'rect)  (set-mcar! (mcdr (mcdr (mcdr musicdata))) 5)] ; set waveform to rectangle wave
+        )
+  )
+        
 ; Data Map
 ; 0 = NILL
 ; 1 = white noise
@@ -149,17 +97,18 @@
 ; 4 = triangle wave
 ; 5 = rectange wave 
 
-(provide setpreset)
 (define (setpreset n)
-    (begin (set-mcar! (mcdr (mcdr (mcdr (mcdr musicdata)))) n) ; update preset
-           (stopnote)))
+  (set-mcar! (mcdr (mcdr (mcdr (mcdr musicdata)))) n)) ; update preset
 
-(provide setdefault)
+(define (pitchbend n)
+  (set-mcar! (mcdr (mcdr (mcdr (mcdr (mcdr musicdata))))) n)) ; update pitchbend value
+  
 (define (setdefault)
   (begin (set-mcar! musicdata 0)
          (set-mcar! (mcdr musicdata) 1000)
          (set-mcar! (mcdr (mcdr musicdata)) 48)
-         (set-mcar! (mcdr (mcdr (mcdr musicdata))) 0);
+         (set-mcar! (mcdr (mcdr (mcdr musicdata))) 0)
+         (set-mcar! (mcdr (mcdr (mcdr (mcdr musicdata)))) 64)
          (send)))
 
 ; (close-output-port out)
