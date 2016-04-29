@@ -30,6 +30,10 @@
   (list led0 led1 led2 led3)
   )
 
+(provide knobs)
+(define knobs
+  (list potA potB))
+
 ;; Helper functions
 ;; getButtonData inputs a list of buttons, and outputs a list of their on/off data
 (provide getButtonData)
@@ -39,10 +43,10 @@
 
 ;; Inputs a list of knobs, and outputs a list of their positions
 (provide getKnob)
-(define (getKnob knobList index)
+(define (getKnob index)
   (if (= index 0)
-      (analog-read (car knobList))
-      (getKnob (cdr knobList) (- index 1))
+      (analog-read (car knobs))
+      (analog-read (cadr knobs))
       )
   )
 
@@ -51,14 +55,47 @@
 (define (lightsOn lights ind . rest)
   (digital-write (list-ref lights ind) HIGH)
   (if (not (null? rest))
-      (lightsOn lights (car rest) (cdr rest))
-      0
+      (apply lightsOn (cons lights rest))
+      #t
+      )
+  )
+           
+(define (lightsOnWRONG lights ind . rest)
+  (if (not (null? rest))
+      (if (not (null? (cdr rest)))
+          (λ ()
+            (digital-write (list-ref lights ind) HIGH)
+            (lightsOn lights (car rest) (cdr rest))
+            )
+          (lightsOn lights (car rest))
+          )
+        (digital-write (list-ref lights (car ind)) HIGH)
+      )
+  )
+
+(define (lightsOnALSOWRONG lights ind . rest)
+  (digital-write (list-ref lights ind) HIGH)
+  (if (not (null? rest))
+      (if (not (null? (cdr rest)))
+          (lightsOn lights (car rest) (cdr rest))
+          (lightsOn lights (car rest))
+          )
+      #t
       )
   )
 
 ;; Inputs a list of lights, and then at least one index, turns off the lights referenced by that index (0-n)
 (provide lightsOff)
+
 (define (lightsOff lights ind . rest)
+  (digital-write (list-ref lights ind) LOW)
+  (if (not (null? rest))
+      (apply lightsOff lights rest)
+      #t
+      )
+  )
+
+(define (lightsOffWRONG lights ind . rest)
   (digital-write (list-ref lights ind) LOW)
   (if (not (null? rest))
       (lightsOff lights (car rest) (cdr rest))
@@ -66,8 +103,8 @@
       )
   )
 
-(define (allLightsOff lights
-  (lightsOff lights 
+;(define allLightsOff
+;  (lightsOff lights 0 1 2 3))
 
 ;; Inputs a list of lights, and then at least one index, turns on the lights referenced by that index (0-n)
 (provide lightsFlash)
@@ -77,8 +114,8 @@
 
 ;; This function initializes ASIP and communication with the board
 (provide initializeBoard)
-(define (initializeBoard lights buttons)
-  (λ ()
+(define initializeBoard
+  (lambda ()
     (open-asip)  
     ;; Setting lights to OUTPUT_MODE
     (for-each (λ (led) (set-pin-mode led OUTPUT_MODE)) lights)
@@ -91,7 +128,7 @@
     ;; Their value is reported every 50 ms
   
     ;; Turning the three pins off
-    (lightsOff lights)
+    ;(allLightsOff)
     
     )
   )
@@ -157,6 +194,6 @@
       )
   )
 
-(initializeBoard lights buttons)
+(initializeBoard)
 ;(lightsOn lights 1)
 ;;(boardCtrl)
