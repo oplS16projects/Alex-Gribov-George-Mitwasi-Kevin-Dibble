@@ -45,6 +45,18 @@ My favorite part was the playnote function. It took a while to make this work wi
 ```
 
 ####Alex Gribov
+My favorite tidbit of bits was the chunk of code where I had to use the dot notation, and Kevin helped me figure out that I need to use the apply function to call it recursively. Until then, I had no idea why apply was useful!
+
+```
+(provide lightsOn)
+(define (lightsOn lights ind . rest)
+  (digital-write (list-ref lights ind) HIGH)
+  (if (not (null? rest))
+      (apply lightsOn (cons lights rest))
+      #t
+      )
+  )
+  ```
 
 ###Detailed description
 * MIDI input from a keyboard through the MAX synth
