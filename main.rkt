@@ -7,22 +7,22 @@
     (lambda (transition)
       ;(print transition)
       (cond [(eq? transition 'getState) state]
+            [(eq? transition 'none) 0]
             [(eq? state 'Main) (cond [(eq? transition 'but0) (set! state 'Effects)]
-                                     [(eq? transition 'but1) (set! state 'SetLoop)]
+                                     [(eq? transition 'but1) (begin
+                                                               (set! state 'PitchBend)
+                                                               (pitch-bend-loop))]
                                      [(eq? transition 'but2) (set! state 'PlayLoops)]
-                                     [(eq? transition 'but3) (toggleOnOff)]
-                                     [(eq? transition 'none) (FIXME)])] ;; This should query buttons and go back to checking cond -- Gribs
+                                     [(eq? transition 'but3) (toggleOnOff)])] ;; This should query buttons and go back to checking cond -- Gribs
             [(eq? state 'Effects) (if (eq? transition 'none) 0 (begin (set! state 'Main) (change-eff transition)))]
-            [(eq? state 'SetLoop) (cond [(eq? transition 'but0) (set! state 'FIXME)]
-                                     [(eq? transition 'but1) (set! state 'FIXME)]
-                                     [(eq? transition 'but2) (set! state 'FIXME)]
-                                     [(eq? transition 'but3) (set! state 'FIXME)]
-                                     [(eq? transition 'none) (FIXME)])] ;; This should query buttons and go back to checking cond
-            [(eq? state 'PlayLoops) (cond [(eq? transition 'but0) (set! state 'FIXME)]
-                                     [(eq? transition 'but1) (set! state 'FIXME)]
-                                     [(eq? transition 'but2) (set! state 'FIXME)]
-                                     [(eq? transition 'but3) (set! state 'FIXME)]
-                                     [(eq? transition 'none) (FIXME)])] ;; This should query buttons and go back to checking cond
+            [(eq? state 'PitchBend) (cond [(eq? transition 'but0) (set! state 'main)]
+                                          [(eq? transition 'but1) (set! state 'main)]
+                                          [(eq? transition 'but2) (set! state 'main)]
+                                          [(eq? transition 'but3) (set! state 'main)])] ;; This should query buttons and go back to checking cond
+            [(eq? state 'PlayLoops) (cond [(eq? transition 'but0) (set! state 'main)]
+                                          [(eq? transition 'but1) (set! state 'main)]
+                                          [(eq? transition 'but2) (set! state 'main)]
+                                          [(eq? transition 'but3) (set! state 'main)])] ;; This should query buttons and go back to checking cond
             [(eq? state 'FIXME) (FIXME)])
       ;;(display state)
       state
@@ -32,8 +32,25 @@
 
 (define main-state-machine (make-state-machine))
 
+(define (pitch-bend-loop)
+  ;query buttons and return the first one that's pressed
+  (fancy-lights (main-state-machine 'getState))
+  (display (main-state-machine 'getState))
+  (pitchbend (* (/ (getKnob 0) 100) 127))
+  (main-state-machine (query-buttons))
+  (if (eq? (main-state-machine 'getState) 'PitchBend) (pitch-bend-loop) 0)
+  )
+
+(define (finish)
+  (let ((finished #f))
+    (lambda (message)
+      (if (eq? message 'finished) (set! finished #t) finished)
+      )
+    )
+  )
+
 (define (toggleOnOff)
-  (FIXME)
+  (finish 'finished)
   )
 
 (define (change-eff button)
@@ -68,19 +85,19 @@
 (define (interpret-state state)
   (cond [(eq? state 'Main) (cons 'off 'off)]
         [(eq? state 'Effects) (cons 'on 'off)]
-        [(eq? state 'SetLoop) (cons 'off 'on)]
+        [(eq? state 'PitchBend) (cons 'off 'on)]
         [(eq? state 'PlayLoops) (cons 'on 'on)]
         [else (print "INVALID STATE")])
   );;end define
 
 (define (fancy-lights state)
   (cond [(eq? state 'Main) (begin
-                             (lightsOn lights (random 4))
-                             (lightsOff lights (random 4)))]
+                             (allLightsOff)
+                             (lightsOn lights (fancy-count)))]
         [(eq? state 'Effects) (begin
                                 (lightsOff lights 1 2 3)
                                 (lightsOn lights 0))]
-        [(eq? state 'SetLoop) (begin
+        [(eq? state 'PitchBend) (begin
                                 (lightsOff lights 0 2 3)
                                 (lightsOn lights 1))]
         [(eq? state 'PlayLoops) (begin
@@ -88,14 +105,22 @@
                                 (lightsOn lights 2))]
         [else (FIXME)]))
 
+(define (make-counter)
+  (let ((count 3))
+    (lambda () (begin (set! count (modulo (+ count 1) 4)) count))
+    )
+  )
+(define fancy-count (make-counter))
+
 (define (main-loop)
-  ;query buttons and return the first one that's pressed
+  (sleep .2)
   (fancy-lights (main-state-machine 'getState))
   ; (display (main-state-machine 'getState))
   ; (pitchbend (* (/ (getKnob 0) 100) 127))
   (main-state-machine (query-buttons))
-  (sleep .2)
-  (main-loop)
+  (if (not (finish 'getValue))
+      (main-loop)
+      0)
   )
 
 (define (pitchbentemp arg) (FIXME))
