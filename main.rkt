@@ -84,6 +84,7 @@
 (define (main-loop)
   ;query buttons and return the first one that's pressed
   (fancy-lights (main-state-machine 'getState))
+  (pitchbend (* (/ (getKnob 0) 100) 127))
   (main-state-machine (query-buttons))
   (main-loop)
   )
