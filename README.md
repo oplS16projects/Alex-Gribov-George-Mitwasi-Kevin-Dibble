@@ -35,6 +35,14 @@ My favorite part of the project was the state machine. I've enjoy state machines
 ```
 
 ####George Mitwasi
+My favorite part was the playnote function. It took a while to make this work without any latency, and I did so by delaying the stopnot function so that MAX has time to read in the off-note data.
+```
+(define (playnote)
+  (begin (set-mcar! musicdata 1) ; toggle noteplay ON
+         (send)
+         (sleep .0001)
+         (stopnote)))
+```
 
 ####Alex Gribov
 
@@ -48,6 +56,6 @@ Under development features:
 
 
 #How to Download and Run
-You may want to link to your latest release for easy downloading by people (such as Mark).
+Download the project zip.
 
-Include what file to run, what to do with that file, how to interact with the app when its running, etc. 
+Open main.rkt, click run and type ```(main-loop)``` into the REPL. Now we're running the main loop for the Aruino and all functionality with sound design should work. If you have MIDI keyboard plugged in, you can play it while editing sounds on the Arduino board.
