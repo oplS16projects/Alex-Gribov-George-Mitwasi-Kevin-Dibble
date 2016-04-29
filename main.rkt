@@ -1,6 +1,6 @@
 #lang racket
 (require "arduino_interface_agribov.rkt")
-;(require "RacketToMax.rkt")
+(require "RacketToMax.rkt")
 
 (define (make-state-machine)
   (let ((state 'Main))
@@ -37,8 +37,12 @@
   )
 
 (define (change-eff button)
-  (setpreset button)
-  (print button)
+  (cond ((eq? button 'but0) (setpreset 0))
+        ((eq? button 'but1) (setpreset 1))
+        ((eq? button 'but2) (setpreset 2))
+        ((eq? button 'but3) (setpreset 3))
+        )
+ ; (print button)
   )
 
 (define (FIXME)
@@ -87,12 +91,14 @@
 (define (main-loop)
   ;query buttons and return the first one that's pressed
   (fancy-lights (main-state-machine 'getState))
-  (display (main-state-machine 'getState))
-  (pitchbend (* (/ (getKnob 0) 100) 127))
+  ; (display (main-state-machine 'getState))
+  ; (pitchbend (* (/ (getKnob 0) 100) 127))
   (main-state-machine (query-buttons))
   (sleep .2)
   (main-loop)
   )
 
-(define (pitchbend arg) (FIXME))
-(define (setpreset arg) (FIXME))
+(define (pitchbentemp arg) (FIXME))
+(define (setpresettemp arg) (FIXME))
+
+;(main-loop)
